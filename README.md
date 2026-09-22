@@ -1,4 +1,4 @@
-# 🏦 Digital Session & Device Risk Profiling in UK Banking
+# 🏦 Digital Session & Device Risk Profiling in Banking
 
 > **A SQL-based fraud analytics project exploring how session risk signals, device trust status, and login geography relate to confirmed fraud outcomes in a simulated UK banking environment.**
 
