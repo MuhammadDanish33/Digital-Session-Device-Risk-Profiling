@@ -6,17 +6,17 @@
 
 ## 📋 Project Overview
 
-This project analyses digital session behaviour across a simulated UK banking customer base to profile the risk associated with login sessions. Using a structured banking dataset of **12,000 digital sessions** across **2,500+ customers**, the analysis examines session risk scores, failed login attempts, device trust status, and login geography — and investigates how these signals connect to confirmed fraud cases.
+This project analyses digital session behaviour across a simulated UK banking customer base to profile the risk associated with login sessions. Using a structured banking dataset of **12,000 digital sessions** across **2,500+ customers**, the analysis examines session risk scores, failed login attempts, device trust status, and login geography and investigates how these signals connect to confirmed fraud cases.
 
-The project was completed using **SQL Server** for all data extraction and analysis, with results captured in Excel. It is designed as a portfolio piece for a Junior Data Analyst role, demonstrating practical skills in multi-table SQL querying, KPI calculation, and translating raw data into business-relevant findings.
+The project was completed using **SQL Server** for all data extraction and analysis, with results captured in Excel. It is designed as a portfolio piece for a Data Analyst role, demonstrating practical skills in multi-table SQL querying, KPI calculation, and translating raw data into business-relevant findings.
 
 ---
 
 ## 🔍 Business Problem
 
-UK banks face persistent fraud risk from compromised devices and logins originating from high-risk locations. Trusted-device programmes — where the bank maintains a list of verified, trusted customer devices — are a key fraud control mechanism. However, their effectiveness is **rarely quantified analytically**.
+UK banks face persistent fraud risk from compromised devices and logins originating from high-risk locations. Trusted-device programmes where the bank maintains a list of verified, trusted customer devices are a key fraud control mechanism. However, their effectiveness is **rarely quantified analytically**.
 
-This project addresses a clear operational question: **do session-level signals (risk scores, failed logins, device trust, login geography) actually differentiate fraudulent from non-fraudulent customer behaviour?** And critically — **does the trusted-device programme measurably reduce fraud rates?**
+This project addresses a clear operational question: **do session-level signals (risk scores, failed logins, device trust, login geography) actually differentiate fraudulent from non-fraudulent customer behaviour?** And critically **does the trusted-device programme measurably reduce fraud rates?**
 
 ---
 
@@ -44,11 +44,11 @@ This project addresses a clear operational question: **do session-level signals 
 
 ## 🗄️ Dataset / Data Scope
 
-This project uses a **simulated UK banking dataset** structured across two schemas (`Banking` and `Common`). No real customer data was used.
+This project uses a **simulated Synthetic banking dataset** structured across two schemas (`Banking` and `Common`). No real customer data was used.
 
 | Table | Schema | Role in Analysis |
 |---|---|---|
-| `FactDigitalSession` | Banking | Core fact table — session risk scores, failed attempts, login success, device & location references |
+| `FactDigitalSession` | Banking | Core fact table session risk scores, failed attempts, login success, device & location references |
 | `DimDevice` | Banking | Device trust status and device type |
 | `DimLocation` | Banking | Country, city, and high-risk country flag |
 | `DimAccount` | Banking | Links customers to accounts (bridge to transactions) |
@@ -130,9 +130,9 @@ All figures below are drawn directly from the SQL query results in the Excel res
 > **Observed pattern:** The difference in average session risk scores between high-risk and low-risk country logins is negligible (0.12 points). While high-risk country logins should remain under monitoring, the session risk score alone does not clearly differentiate them from low-risk country sessions in this dataset.
 
 The highest individual risk scores within high-risk countries came from:
-- **UAE / Lake Jane**: Avg score 72.03 (19 sessions, 4 failed logins)
-- **Pakistan / North Jordan**: Avg score 58.61 (21 sessions)
-- **Nigeria / Elizabethfort**: Avg score 58.09 (22 sessions, 2 failed logins)
+- **UAE /**: Avg score 72.03 (19 sessions, 4 failed logins)
+- **Pakistan /**: Avg score 58.61 (21 sessions)
+- **Nigeria /**: Avg score 58.09 (22 sessions, 2 failed logins)
 
 ---
 
@@ -145,7 +145,7 @@ The highest individual risk scores within high-risk countries came from:
 | Tablet | 3,050 | 2,828 | 92.72% |
 | Mobile | 2,886 | 2,674 | **92.65%** |
 
-> **Observed pattern:** The spread across device types is minimal — only a **0.93 percentage point** difference between the highest (Laptop 93.58%) and lowest (Mobile 92.65%). Device type alone is not a meaningful differentiator of session risk in this dataset.
+> **Observed pattern:** The spread across device types is minimal only a **0.93 percentage point** difference between the highest (Laptop 93.58%) and lowest (Mobile 92.65%). Device type alone is not a meaningful differentiator of session risk in this dataset.
 
 ---
 
@@ -205,17 +205,17 @@ The highest individual risk scores within high-risk countries came from:
 
 The analysis followed a structured, query-by-query approach aligned to each business question:
 
-1. **Session risk distribution** (Q1) — Classified all 12,000 sessions into risk bands using a `CASE WHEN` statement on `SessionRiskScore`, then calculated each band's percentage share using a window function.
+1. **Session risk distribution** (Q1) Classified all 12,000 sessions into risk bands using a `CASE WHEN` statement on `SessionRiskScore`, then calculated each band's percentage share using a window function.
 
-2. **Failed login patterns** (Q2 + Q3) — First analysed the detailed pattern of how failed attempts distribute across sessions and their average risk scores; then calculated the overall failed login rate as a single KPI.
+2. **Failed login patterns** (Q2 + Q3) First analysed the detailed pattern of how failed attempts distribute across sessions and their average risk scores; then calculated the overall failed login rate as a single KPI.
 
-3. **Country risk analysis** (Q4 + Q5) — Joined the session table to the location dimension to produce both a city-level breakdown and an overall KPI for high-risk country session share and average risk score comparison.
+3. **Country risk analysis** (Q4 + Q5) Joined the session table to the location dimension to produce both a city-level breakdown and an overall KPI for high-risk country session share and average risk score comparison.
 
 4. **Device trust analysis** (Q6 + Q7) — Joined sessions to the device dimension to compare average risk scores, high-risk session counts, and failed attempts between trusted and untrusted devices, broken down by device type.
 
 5. **Confirmed fraud rate by device trust** (Q8) — The most technically complex query: a CTE first aggregated confirmed fraud and loss at the customer level via a five-table join chain (`FactDigitalSession → DimDevice → DimAccount → FactTransaction → FactFraudAlert → FactCase`), then joined back to calculate fraud rates per device trust group. `LEFT JOIN` was used throughout to retain customers with no confirmed fraud, ensuring the denominator was correct.
 
-6. **Customer risk segment analysis** (Q9) — Joined sessions to the `Common.Customer` table to compare high-risk session rates across customer risk rating segments.
+6. **Customer risk segment analysis** (Q9) Joined sessions to the `Common.Customer` table to compare high-risk session rates across customer risk rating segments.
 
 ---
 
@@ -238,8 +238,8 @@ This project delivers a **clear, evidence-based view of digital session risk** a
 | File | Description |
 |---|---|
 | `Digital Session & Device Risk Profiling.sql` | All 9 SQL queries used for the analysis, with inline comments explaining each query's purpose |
-| `Digital Session & Device Risk Profiling.xlsx` | SQL query results exported to Excel — one tab per query result set |
-| `Digital_Session_Device_Risk_Profiling.docx` | Full project documentation — business problem, objectives, KPIs, stakeholders, methodology, and business value |
+| `Digital Session & Device Risk Profiling.xlsx` | SQL query results exported to Excel one tab per query result set |
+| `Digital_Session_Device_Risk_Profiling.docx` | Full project documentation business problem, objectives, KPIs, stakeholders, methodology, and business value |
 | `README.md` | This file |
 
 **SQL query index:**
@@ -260,13 +260,9 @@ This project delivers a **clear, evidence-based view of digital session risk** a
 
 ## ✅ Conclusion
 
-This project demonstrates end-to-end SQL analytical skills applied to a realistic UK banking fraud analytics scenario — from business problem definition through to SQL query execution and business-oriented result interpretation.
+This project demonstrates end-to-end SQL analytical skills applied to a realistic UK banking fraud analytics scenario from business problem definition through to SQL query execution and business-oriented result interpretation.
 
-The most significant findings challenge the assumptions underlying the project's starting hypothesis: **session risk signals in this dataset (failed logins, device trust, country risk) do not strongly differentiate fraud outcomes** using the current threshold settings. Rather than presenting this as a limitation, this is an honest and analytically valuable finding — in a real banking environment, it would trigger a threshold review, a deeper audit of the trusted-device programme, and a reassessment of how these signals are combined in fraud detection rules.
+The most significant findings challenge the assumptions underlying the project's starting hypothesis: **session risk signals in this dataset (failed logins, device trust, country risk) do not strongly differentiate fraud outcomes** using the current threshold settings. Rather than presenting this as a limitation, this is an honest and analytically valuable finding in a real banking environment, it would trigger a threshold review, a deeper audit of the trusted-device programme, and a reassessment of how these signals are combined in fraud detection rules.
 
-The project is intentionally kept at a **junior analyst scope**: focused, evidence-based, clearly documented, and free from unsupported claims. All findings in this README are drawn directly from the SQL query results.
-
----
-
-*Dataset: Simulated UK banking data. No real customer information was used. Analysis completed using SQL Server.*  
-*Analyst: Muhammad Danish | Junior Data Analyst*
+---  
+*Analyst: Muhammad Danish | Data Analyst*
